@@ -141,17 +141,69 @@
         .popup button:hover {
             opacity: 0.9;
         }
-
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            color: #555;
-        }
-
-        footer img {
-            margin-top: 10px;
-        }
     </style>
+    <script>
+    const reminders = [
+        "أستغفر الله العظيم الذي لا إله إلا هو الحي القيوم وأتوب إليه.",
+        "اللهم اغفر لي ولوالدي وللمؤمنين يوم يقوم الحساب.",
+        "رب اغفر لي وتب عليّ إنك أنت التواب الرحيم.",
+        "اللهم إني ظلمت نفسي فاغفر لي فإنه لا يغفر الذنوب إلا أنت.",
+        "سبحان الله وبحمده، سبحان الله العظيم.",
+        "اللهم اجعلني من التوابين واجعلني من المتطهرين.",
+        "أستغفر الله الذي لا إله إلا هو وأتوب إليه.",
+        "اللهم إني أسألك العفو والعافية.",
+        "رب اغفر لي وارحمني واهدني وعافني وارزقني.",
+        "لا إله إلا أنت سبحانك إني كنت من الظالمين."
+    ];
+
+    function copyToClipboard(elementId) {
+        const text = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(text);
+    }
+
+    function pasteAndClear(elementId) {
+        navigator.clipboard.readText().then((text) => {
+            const textarea = document.getElementById(elementId);
+            textarea.value = "";
+            textarea.value = text;
+        });
+    }
+
+    function processForm() {
+    showPopup();
+    setTimeout(() => {
+        document.querySelector("form").submit();
+    }, 5100); // الإرسال بعد انتهاء عرض النافذة.
+}
+
+    function showPopup() {
+        const popup = document.getElementById("popup");
+        const randomReminder = reminders[Math.floor(Math.random() * reminders.length)];
+        document.getElementById("popup-message").innerText = "تمت المعالجة بنجاح ✅";
+        document.getElementById("popup-reminder").innerText = randomReminder;
+        popup.style.display = "block";
+
+        const timeoutId = setTimeout(() => {
+            popup.style.display = "none";
+        }, 5000); // النافذة تبقى مرئية لمدة 5 ثوانٍ.
+
+        const closeButton = popup.querySelector("button");
+
+        const closePopup = () => {
+            clearTimeout(timeoutId); // إلغاء الإغلاق التلقائي عند النقر على "موافق".
+            popup.style.display = "none";
+            closeButton.removeEventListener("click", closePopup);
+        };
+
+        closeButton.addEventListener("click", closePopup);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelector(".paste-button").addEventListener("click", () => {
+            pasteAndClear("input_text");
+        });
+    });
+</script>
 </head>
 <body>
     <h1>Koren Number (Mr.Zoghbi)</h1>
@@ -185,14 +237,15 @@
         <button>موافق</button>
     </div>
 
-    <footer>
+    <!-- إضافة عدد المستخدمين -->
+    <div style="margin-top: 20px; text-align: center;">
         <p>عدد مستخدمين الموقع:</p>
         <a href="https://koren.onrender.com" target="_blank">
             <img src="https://hitwebcounter.com/counter/counter.php?page=18094716&style=0010&nbdigits=6&type=page&initCount=0" 
-                 title="Counter Widget" 
+                 title="المبرمج محمد زغبي" 
                  alt="Visit counter For Websites" 
                  border="0" />
         </a>
-    </footer>
+    </div>
 </body>
 </html>
