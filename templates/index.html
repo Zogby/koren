@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koren Number (Mr.Zoghbi)</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #4a90e2;
+        }
+
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            resize: none;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .buttons button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #ffffff;
+        }
+
+        .paste-button {
+            background-color: #4caf50;
+        }
+
+        .process-button {
+            background-color: #2196f3;
+        }
+
+        .copy-button {
+            background-color: #f39c12;
+        }
+
+        .buttons button:hover {
+            opacity: 0.9;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4ff;
+            border: 1px solid #cce7ff;
+            border-radius: 5px;
+        }
+
+        .result h3 {
+            margin: 0 0 10px;
+            color: #2c7be5;
+        }
+
+        .result pre {
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            z-index: 1000;
+        }
+
+        .popup p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .popup button {
+            padding: 10px 20px;
+            background-color: #2196f3;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup button:hover {
+            opacity: 0.9;
+        }
+    </style>
+    <script>
+    const reminders = [
+        "أستغفر الله العظيم الذي لا إله إلا هو الحي القيوم وأتوب إليه.",
+        "اللهم اغفر لي ولوالدي وللمؤمنين يوم يقوم الحساب.",
+        "رب اغفر لي وتب عليّ إنك أنت التواب الرحيم.",
+        "اللهم إني ظلمت نفسي فاغفر لي فإنه لا يغفر الذنوب إلا أنت.",
+        "سبحان الله وبحمده، سبحان الله العظيم.",
+        "اللهم اجعلني من التوابين واجعلني من المتطهرين.",
+        "أستغفر الله الذي لا إله إلا هو وأتوب إليه.",
+        "اللهم إني أسألك العفو والعافية.",
+        "رب اغفر لي وارحمني واهدني وعافني وارزقني.",
+        "لا إله إلا أنت سبحانك إني كنت من الظالمين."
+    ];
+
+    function copyToClipboard(elementId) {
+        const text = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(text);
+    }
+
+    function pasteAndClear(elementId) {
+        navigator.clipboard.readText().then((text) => {
+            const textarea = document.getElementById(elementId);
+            textarea.value = "";
+            textarea.value = text;
+        });
+    }
+
+    function processForm() {
+    showPopup();
+    setTimeout(() => {
+        document.querySelector("form").submit();
+    }, 5100); // الإرسال بعد انتهاء عرض النافذة.
+}
+
+    function showPopup() {
+        const popup = document.getElementById("popup");
+        const randomReminder = reminders[Math.floor(Math.random() * reminders.length)];
+        document.getElementById("popup-message").innerText = "تمت المعالجة بنجاح ✅";
+        document.getElementById("popup-reminder").innerText = randomReminder;
+        popup.style.display = "block";
+
+        const timeoutId = setTimeout(() => {
+            popup.style.display = "none";
+        }, 5000); // النافذة تبقى مرئية لمدة 5 ثوانٍ.
+
+        const closeButton = popup.querySelector("button");
+
+        const closePopup = () => {
+            clearTimeout(timeoutId); // إلغاء الإغلاق التلقائي عند النقر على "موافق".
+            popup.style.display = "none";
+            closeButton.removeEventListener("click", closePopup);
+        };
+
+        closeButton.addEventListener("click", closePopup);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelector(".paste-button").addEventListener("click", () => {
+            pasteAndClear("input_text");
+        });
+    });
+</script>
+</head>
+<body>
+    <h1>Koren Number (Mr.Zoghbi)</h1>
+    <form method="post" action="/process">
+        <label for="input_text">أدخل القائمة النصية:</label>
+        <textarea id="input_text" name="input_text" placeholder="أدخل القائمة هنا..."></textarea>
+
+        <label for="start_index">ابدأ من الخانة:</label>
+        <input type="number" id="start_index" name="start_index" value="0" required>
+
+        <label for="end_index">احذف حتى الخانة:</label>
+        <input type="number" id="end_index" name="end_index" value="2" required>
+
+        <div class="buttons">
+            <button type="button" class="paste-button">لصق النص</button>
+            <button type="button" class="process-button" onclick="processForm()">معالجة القائمة</button>
+            <button type="button" class="copy-button" onclick="copyToClipboard('result_text')">نسخ النتائج</button>
+        </div>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        <h3>القائمة المعالجة:</h3>
+        <pre id="result_text">{{ result }}</pre>
+    </div>
+    {% endif %}
+
+    <div id="popup" class="popup">
+        <p id="popup-message"></p>
+        <p id="popup-reminder"></p>
+        <button>موافق</button>
+    </div>
+</body>
+</html>
